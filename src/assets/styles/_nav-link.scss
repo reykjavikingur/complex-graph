@@ -1,0 +1,8 @@
+.nav-link {
+	color: #03f;
+	text-decoration: underline;
+	&.active {
+		background-color: #999;
+		text-decoration: none;
+	}
+}

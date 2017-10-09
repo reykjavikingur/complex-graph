@@ -1,0 +1,35 @@
+{
+  "name": "complex-graph",
+  "version": "1.0.0",
+  "description": "HTML canvas complex function graphing",
+  "author": "Andrew Strader",
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "create": "gulp clean && gulp create",
+    "start": "gulp start",
+    "test": "mocha \"src/**/*.spec.js\""
+  },
+  "dependencies": {
+    "babel-preset-env": "^1.5.2",
+    "babelify": "^7.3.0",
+    "browser-sync": "^2.18.8",
+    "browserify": "^14.3.0",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-util": "^3.0.8",
+    "mkdirp": "^0.5.1",
+    "promise": "^8.0.1",
+    "query-string": "^5.0.0",
+    "require-globify": "^1.4.1",
+    "rimraf": "^2.6.1",
+    "underscore": "^1.8.3",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.5.3",
+    "should": "^13.1.0"
+  }
+}
