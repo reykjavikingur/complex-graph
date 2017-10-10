@@ -1,8 +1,9 @@
 var template = `
 <vl-layout>
     <h2>Welcome</h2>
+    
     <main>
-        What do you think of this internal home template? Awesome, right?
+        <cx-graph></cx-graph>
     </main>
     
 </vl-layout>
