@@ -3,7 +3,10 @@ var template = `
     <h2>Welcome</h2>
     
     <main>
-        <cx-graph></cx-graph>
+        
+        <cx-graph expr="z"></cx-graph>
+        
+        
     </main>
     
 </vl-layout>
