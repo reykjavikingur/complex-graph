@@ -1,5 +1,6 @@
 const math = require('mathjs');
 const Color = require('color');
+const YUV = require('../lib/yuv');
 
 var template = `
 <canvas ref="canvas" :width="width" :height="height"></canvas>
@@ -23,7 +24,7 @@ module.exports = Vue.component('cx-graph', {
         var context = canvas.getContext('2d');
 
         var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-        var radius = 2;
+        var radius = 2.72;
         this.graph(imageData, {
             expr: this.expr,
             minReal: -radius,
@@ -47,7 +48,7 @@ module.exports = Vue.component('cx-graph', {
                     let x = px * xScale + options.minReal;
                     let y = -(py * yScale + options.minImag);
                     let c = code.eval({z: math.complex(x, y)});
-                    let color = this.smoothColor(c);
+                    let color = this.smootherColor(c);
                     for (let bi = 0; bi < 4; bi++) {
                         imageData.data[byteIndex + bi] = color[bi];
                     }
@@ -71,6 +72,40 @@ module.exports = Vue.component('cx-graph', {
                 Math.round(blu),
                 Math.round(alf)
             ];
+        },
+        smootherColor(c) {
+            var arg = math.arg(c);
+            arg = normalizeAngle(arg);
+            arg += arg % (Math.PI / 2) * -0.05;
+            var abs = math.abs(c);
+            var y = abs / 2.0;
+            y += y % 1.0 * -0.05 + y % 0.1 * -0.5;
+            var s = 0.7;
+            var u = Math.cos(arg) * YUV.Umax * s;
+            var v = Math.sin(arg) * YUV.Vmax * s;
+            var yuv = new YUV(y, u, v);
+            var rgb = yuv.rgb();
+            return [
+                clamp(scale(rgb[0])),
+                clamp(scale(rgb[1])),
+                clamp(scale(rgb[2])),
+                255
+            ];
+
+            function scale(ch) {
+                return ch * 255;
+            }
+
+            function clamp(ch) {
+                return Math.max(0, Math.min(Math.round(ch), 255));
+            }
+            function normalizeAngle(theta) {
+                var theta = Math.atan2(Math.sin(theta), Math.cos(theta));
+                if (theta < 0) {
+                    theta += 2 * Math.PI;
+                }
+                return theta;
+            }
         }
     }
 
