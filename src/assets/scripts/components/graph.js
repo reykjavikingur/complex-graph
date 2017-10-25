@@ -24,7 +24,7 @@ module.exports = Vue.component('cx-graph', {
         var context = canvas.getContext('2d');
 
         var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-        var radius = 2.72;
+        var radius = 5;
         this.graph(imageData, {
             expr: this.expr,
             minReal: -radius,
@@ -48,7 +48,7 @@ module.exports = Vue.component('cx-graph', {
                     let x = px * xScale + options.minReal;
                     let y = -(py * yScale + options.minImag);
                     let c = code.eval({z: math.complex(x, y)});
-                    let color = this.smootherColor(c);
+                    let color = this.smoothColor(c);
                     for (let bi = 0; bi < 4; bi++) {
                         imageData.data[byteIndex + bi] = color[bi];
                     }
@@ -58,10 +58,10 @@ module.exports = Vue.component('cx-graph', {
         smoothColor(c) {
             var arg = math.arg(c);
             var abs = math.abs(c);
-            var hue = arg / Math.PI * 180;
-            var lumInc = 5;
-            var lum = Math.floor(abs * 50 / lumInc) * lumInc;
-            var rgb = Color.hsl(hue, 100, lum).rgb();
+            var hue = (arg + Math.PI) / Math.PI * 180;
+            var col = Color.hsl(hue, 100, 50);
+            var lum = Math.log(1 + abs) / 2 * 100;
+            var rgb = col.lightness(lum).rgb();
             var red = rgb.color[0];
             var grn = rgb.color[1];
             var blu = rgb.color[2];
@@ -76,10 +76,10 @@ module.exports = Vue.component('cx-graph', {
         smootherColor(c) {
             var arg = math.arg(c);
             arg = normalizeAngle(arg);
-            arg += arg % (Math.PI / 2) * -0.05;
+            //arg += arg % (Math.PI / 2) * -0.05;
             var abs = math.abs(c);
-            var y = abs / 2.0;
-            y += y % 1.0 * -0.05 + y % 0.1 * -0.5;
+            var y = Math.log(1 + abs) / 2;
+            //y += y % 1.0 * -0.05 + y % 0.1 * -0.5;
             var s = 0.7;
             var u = Math.cos(arg) * YUV.Umax * s;
             var v = Math.sin(arg) * YUV.Vmax * s;
@@ -99,6 +99,7 @@ module.exports = Vue.component('cx-graph', {
             function clamp(ch) {
                 return Math.max(0, Math.min(Math.round(ch), 255));
             }
+
             function normalizeAngle(theta) {
                 var theta = Math.atan2(Math.sin(theta), Math.cos(theta));
                 if (theta < 0) {
@@ -106,6 +107,10 @@ module.exports = Vue.component('cx-graph', {
                 }
                 return theta;
             }
+        },
+        naturalLightness(hue) {
+            var c = Color.hsl(hue, 100, 0.5);
+
         }
     }
 
