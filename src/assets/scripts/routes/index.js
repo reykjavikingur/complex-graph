@@ -4,7 +4,7 @@ var template = `
     
     <main>
         
-        <cx-graph expr="(z - 1)(z + 1)"></cx-graph>
+        <cx-graph expr="(1 + z)(1 - z)"></cx-graph>
         
         
     </main>
