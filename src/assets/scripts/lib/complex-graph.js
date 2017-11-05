@@ -41,21 +41,20 @@ function smoothColor(c) {
     var arg = math.arg(c);
     var abs = math.abs(c);
     var hue = (arg + Math.PI) / Math.PI * 180;
-    var col = Color.hsl(hue, 100, 50);
     var lum = (abs < 1) ?
         0.5 * Math.sqrt(abs) - 0.1 * (abs % 0.1) :
         Math.log(abs) / 5 + 0.5 - 0.05 * (abs % 1);
     lum *= 100;
-    var rgb = col.lightness(lum).rgb();
+    var rgb = Color.hsl(hue, 100, lum).rgb();
     var red = rgb.color[0];
     var grn = rgb.color[1];
     var blu = rgb.color[2];
-    var alf = rgb.valpha * 255;
+    var alf = 255;
     return [
-        Math.round(red),
-        Math.round(grn),
-        Math.round(blu),
-        Math.round(alf)
+        red,
+        grn,
+        blu,
+        alf,
     ];
 }
 
