@@ -38,24 +38,64 @@ function complexGraph(expr, options) {
 }
 
 function smoothColor(c) {
-    var arg = math.arg(c);
-    var abs = math.abs(c);
-    var hue = (arg + Math.PI) / Math.PI * 180;
+    var re, im;
+    if (typeof c === 'number') {
+        re = c;
+        im = 0;
+    }
+    else {
+        re = c.re;
+        im = c.im;
+    }
+    var arg = Math.atan2(im, re);
+    var abs = Math.sqrt(re * re + im * im);
+    var hue = (arg + Math.PI);
     var lum = (abs < 1) ?
         0.5 * Math.sqrt(abs) - 0.1 * (abs % 0.1) :
         Math.log(abs) / 5 + 0.5 - 0.05 * (abs % 1);
-    lum *= 100;
-    var rgb = Color.hsl(hue, 100, lum).rgb();
-    var red = rgb.color[0];
-    var grn = rgb.color[1];
-    var blu = rgb.color[2];
-    var alf = 255;
+    //lum *= 100;
+    return hsl2rgb_(hue, 1, lum);
+}
+
+function hsl2rgb(hue, sat, lum) {
+    var rgb = Color.hsl(hue / Math.PI * 180, sat * 100, lum * 100).rgb();
+    var color = rgb.color;
     return [
-        red,
-        grn,
-        blu,
-        alf,
+        color[0],
+        color[1],
+        color[2],
+        255,
     ];
+}
+
+function hsl2rgb_(hue, sat, lum) {
+    var H = hue / (Math.PI / 3); // H is between 0 and 6, inclusive
+    var C = sat * (1 - Math.abs(2 * lum - 1));
+    var X = C * (1 - Math.abs(H % 2 - 1));
+    var m = lum - 0.5 * C;
+    var RGB;
+    if (H < 1) {
+        RGB = [C, X, 0];
+    }
+    else if (H < 2) {
+        RGB = [X, C, 0];
+    }
+    else if (H < 3) {
+        RGB = [0, C, X];
+    }
+    else if (H < 4) {
+        RGB = [0, X, C];
+    }
+    else if (H < 5) {
+        RGB = [X, 0, C];
+    }
+    else {
+        RGB = [C, 0, X];
+    }
+    var r = (RGB[0] + m) * 255;
+    var g = (RGB[1] + m) * 255;
+    var b = (RGB[2] + m) * 255;
+    return [r, g, b, 255];
 }
 
 module.exports = complexGraph;
