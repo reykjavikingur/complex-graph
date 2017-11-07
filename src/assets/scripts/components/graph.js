@@ -6,7 +6,7 @@ var template = `
 
 module.exports = Vue.component('cx-graph', {
 
-    props: ['expr', 'radius'],
+    props: ['expr', 'scope', 'radius'],
 
     template: template,
 
@@ -18,8 +18,8 @@ module.exports = Vue.component('cx-graph', {
     },
 
     computed: {
-        drawArgs: function() {
-            return [this.expr, {
+        drawArgs: function () {
+            return [this.expr, this.scope, {
                 radius: this.radius,
             }];
         }
@@ -30,17 +30,17 @@ module.exports = Vue.component('cx-graph', {
     },
 
     watch: {
-        drawArgs: function(val) {
+        drawArgs: function (val) {
             this.draw.apply(this, this.drawArgs);
         },
     },
 
     methods: {
-        draw(expr, options) {
+        draw(expr, scope, options) {
             var canvas = this.$refs.canvas;
             var context = canvas.getContext('2d');
             var radius = options.radius || 2;
-            complexGraph.call(context, expr, {
+            complexGraph.call(context, expr, scope || {}, {
                 minReal: -radius,
                 maxReal: +radius,
                 minImag: -radius,

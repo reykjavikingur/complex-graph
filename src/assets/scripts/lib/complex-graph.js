@@ -12,7 +12,7 @@ const Color = require('color');
  * radius {Number}
  *
  */
-function complexGraph(expr, options) {
+function complexGraph(expr, scope, options) {
     var context = this;
     var imageData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
 
@@ -26,7 +26,8 @@ function complexGraph(expr, options) {
             let byteIndex = (py * imageData.width + px) * 4;
             let x = px * xScale + options.minReal;
             let y = -(py * yScale + options.minImag);
-            let c = code.eval({z: math.complex(x, y)});
+            scope.z = math.complex(x, y);
+            let c = code.eval(scope);
             let color = smoothColor(c);
             for (let bi = 0; bi < 4; bi++) {
                 imageData.data[byteIndex + bi] = color[bi];
