@@ -1,3 +1,5 @@
+const math = require('mathjs');
+
 var template = `
 <vl-layout>
     <h2>Welcome</h2>
@@ -5,47 +7,18 @@ var template = `
     <main>
     
         <p>
+            Re(c) = <input type="number" v-model="cx" step="0.1" />
+            <br/>
+            Im(c) = <input type="number" v-model="cy" step="0.1" />
+        </p>
+        <p>
             <input type="text" v-model="expr" />
         </p>
         <p>
             radius = <input type="number" v-model="radius" step="0.1" />
         </p>
         
-        <cx-graph :expr="expr" :radius="radius"></cx-graph>
-        
-        <hr/>
-        
-        <div>
-            <cx-graph expr="z" radius="3"></cx-graph>z
-        </div>
-        
-        <div>
-            <cx-graph expr="z^2" radius="3"></cx-graph>z^2
-        </div>
-        
-        <div>
-            <cx-graph expr="z^3" radius="3"></cx-graph>z^3
-        </div>
-        
-        <div>
-            <cx-graph expr="e^z" radius="3"></cx-graph>e^z
-        </div>
-        
-        <div>
-            <cx-graph expr="cos(z)" radius="3"></cx-graph>cos(z)
-        </div>
-        
-        <div>
-            <cx-graph expr="i*sin(z)" radius="3"></cx-graph>i*sin(z)
-        </div>
-        
-        <div>
-            <cx-graph expr="z^0.5" radius="3"></cx-graph>z^0.5
-        </div>
-        
-        <div>
-            <cx-graph expr="log(z)" radius="3"></cx-graph>log(z)
-        </div>
+        <cx-graph :expr="expr" :radius="radius" :scope="{c: c}"></cx-graph>
         
         <!--
         <div>
@@ -67,12 +40,16 @@ module.exports = Vue.component('home-page', {
 
     data() {
         return {
-            expr: '(1 + z)(1 - z)',
+            expr: '(c + z)(c - z)',
             radius: 3,
+            cx: '1',
+            cy: '0',
         };
     },
 
     computed: {
-
+        c() {
+            return math.complex(this.cx, this.cy);
+        }
     }
 });
