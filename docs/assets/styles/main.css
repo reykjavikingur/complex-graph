@@ -1,0 +1,26 @@
+/* main styles */
+footer {
+  margin-top: 10em;
+}
+
+.menu li {
+  display: inline-block;
+  list-style: none;
+}
+
+.nav-link {
+  color: #03f;
+  text-decoration: underline;
+}
+
+.nav-link.active {
+  background-color: #999;
+  text-decoration: none;
+}
+
+body {
+  background-color: #e0e0e0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/*# sourceMappingURL=main.css.map */
